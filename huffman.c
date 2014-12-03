@@ -39,9 +39,13 @@ void get_huffman_tree(HUFFMAN_TABLE *huffman_table)
 	int i,j;
 	for(i=0;i<256;i++)
 	{
-		tree[i].val = &huffman_table[i];
-		tree[i].left = tree[i].right = 0;
-		hInsert(pq,&tree[i]);
+		if(huffman_table[i].val)
+		{
+			tree[i].val = &huffman_table[i];
+			tree[i].left = tree[i].right = 0;
+			hInsert(pq,&tree[i]);
+			printf("%d %d\n",huffman_table[i].no, huffman_table[i].val);
+		}
 	}
 	for(j=0;pq->count > 1;j++,i++)
 	{

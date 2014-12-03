@@ -59,6 +59,7 @@ void compress(char *path)
   rsize = LZ77_encode(buffer,size,result);
   printf("LZ77 size %d\n",rsize/1024);
   rsize = huffman_encode(result,rsize,buffer);
+  //rsize = huffman_encode(buffer,size,result);
   printf("huffman size %d\n",rsize/1024);
   
   // set buffer to file
