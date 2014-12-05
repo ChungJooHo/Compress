@@ -5,7 +5,7 @@ ASFLAGS	= -g
 LDFLAGS	= 
 RM	= rm
 
-CSRCS	= main.c compress.c LZ77.c huffman.c heap.c tree.c 
+CSRCS	= main.c compress.c LZ77.c huffman.c heap.c tree.c substitution.c runlength.c
 ASRCS	= 
 TARGET	= compress
 OBJECTS	= $(CSRCS:.c=.o) $(ASRCS:.s=.o)
