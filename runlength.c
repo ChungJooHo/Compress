@@ -22,7 +22,7 @@ int runlength_encode(char *buffer, int size, char *output)
 		else
 		{
 			output[j++] = buffer[i - 1];
-			output[j++] = count;
+			if(count > 1) output[j++] = count;
 			count = 1;
 		}
 	}

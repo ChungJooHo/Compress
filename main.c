@@ -5,7 +5,7 @@ int main(int argc,char *argv[])
   int p = time(0);
   if(argc == 2)
 	{
-		compress(argv[1]);
+		compress(argv[1],0);
 	}
   printf("%d",time(0)-p);
 }

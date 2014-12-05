@@ -32,7 +32,7 @@ int get_size(FILE *fp)
 }
 void get_buffer(FILE *fp,char *buffer)
 {
-	for(;*(buffer++)=fgetc(fp),!feof(fp);
+	for(;*(buffer++)=fgetc(fp),!feof(fp););
 }
 
 int get_name(char *path)
@@ -84,30 +84,31 @@ void compress(char *path, int option)
 
 int encode(char *buffer, int size, char *result, int name)
 {
-	int rsize;
+	int rsize = size;
 	switch(name)
 	{
 	case 1:
-		rsize = LZ77_encode(buffer,size,result);
+		rsize = LZ77_encode(buffer,rsize,result);
 		rsize = huffman_encode(result,rsize,buffer);
 	break;
 	case 2:
-		rsize = LZ77_encode(buffer,size,result);
+		rsize = LZ77_encode(buffer,rsize,result);
 		rsize = huffman_encode(result,rsize,buffer);
 	break;
 	case 3:
-		rsize = substitution(buffer,size,result);
-		rsize = LZ77_encode(result,rsize,buffer);
-		//rsize = huffman_encode(result,rsize,buffer);
+		rsize = substitution_encode(buffer,rsize,result);
+		rsize = huffman_encode(result,rsize,buffer);
 	break;
 	case 4:
-		rsize = huffman_encode(buffer,size,result);		
+		rsize = huffman_encode(buffer,rsize,result);
 	break;
 	case 5:
-		rsize = runlength_encode(buffer,size,result);
-		//rsize = LZ77_encode(buffer,size,result);
+		rsize = LZ77_encode(buffer,rsize,result);
 		rsize = huffman_encode(result,rsize,buffer);
-	break;	
+		//rsize = runlength_encode(buffer,rsize,result);
+	break;
+	default:
+		return -1;	
 	}
 	return rsize;
 }
