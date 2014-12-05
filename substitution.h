@@ -4,6 +4,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-int substitution(char *buffer, int size, char *output);
+int substitution_encode(char *buffer, int size, char *output);
 
 #endif

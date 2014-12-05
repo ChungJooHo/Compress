@@ -35,12 +35,19 @@ void get_buffer(FILE *fp,char *buffer)
 	for(;*(buffer++)=fgetc(fp),!feof(fp););
 }
 
+int get_name(char *path)
+{
+	int len = strlen(path);
+	for(;path[len--]!='.';);
+	return path[len] - '0';
+}
+
 void set_buffer(FILE *fp,char *buffer, int size)
 {
   fwrite(&size,1,sizeof(int),fp);
   for(;size--;)fputc(*(buffer++),fp);	
 }
-void compress(char *path)
+void compress(char *path, int option)
 {
 	FILE *fp;
   char *buffer, *result;
@@ -54,17 +61,53 @@ void compress(char *path)
   get_buffer(fp,buffer);
   fclose(fp);
   
-  // encode
-  result = (char *)malloc(size+0xFFFFFF);
-  rsize = LZ77_encode(buffer,size,result);
-  printf("LZ77 size %d\n",rsize/1024);
-  rsize = huffman_encode(result,rsize,buffer);
-  //rsize = huffman_encode(buffer,size,result);
-  printf("huffman size %d\n",rsize/1024);
+  int name = get_name(path);
   
+  result = (char *)malloc(size+0xFFFFFF);
+  // encode
+  if (option == 0)
+	{
+		rsize = encode(buffer,size,result,name);
+	}
+	
+	// decode
+	else
+	{
+		
+	}
   // set buffer to file
   printf("%d to %d\n",size,rsize);
   fp = fopen(get_encode_name(path),"wb");
   set_buffer(fp,result,rsize);
   fclose(fp);  
+}
+
+int encode(char *buffer, int size, char *result, int name)
+{
+	int rsize;
+	switch(name)
+	{
+	case 1:
+		rsize = LZ77_encode(buffer,size,result);
+		rsize = huffman_encode(result,rsize,buffer);
+	break;
+	case 2:
+		rsize = LZ77_encode(buffer,size,result);
+		rsize = huffman_encode(result,rsize,buffer);
+	break;
+	case 3:
+		rsize = substitution(buffer,size,result);
+		rsize = LZ77_encode(result,rsize,buffer);
+		//rsize = huffman_encode(result,rsize,buffer);
+	break;
+	case 4:
+		rsize = huffman_encode(buffer,size,result);		
+	break;
+	case 5:
+		rsize = runlength_encode(buffer,size,result);
+		//rsize = LZ77_encode(buffer,size,result);
+		rsize = huffman_encode(result,rsize,buffer);
+	break;	
+	}
+	return rsize;
 }
