@@ -11,7 +11,7 @@ int runlength_encode(char *buffer, int size, char *output)
 	{
 		if (buffer[i - 1] == buffer[i])
 		{
-			count++;
+			count++;    
 			if (count == 255)
 			{
 				output[j++] = buffer[i - 1];
